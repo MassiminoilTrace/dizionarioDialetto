@@ -1,21 +1,31 @@
 package vocaboli;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Parola {
-	private String traduzioneLingua1;
-	private String traduzioneLingua2;
-
-	Parola(String traduzioneLingua1, String traduzioneLingua2)
+	private Map<String, String> dizLinguaTraduzione = new HashMap<>();
+	
+	void aggiungiTraduzione(String lingua, String parola)
 	{
-		this.traduzioneLingua1 = traduzioneLingua1;
-		this.traduzioneLingua2 = traduzioneLingua2;
+		this.dizLinguaTraduzione.put(lingua, parola);
 	}
-
-	String getTraduzioneLingua1() {
-		return traduzioneLingua1;
+	
+	String ottieniTraduzione(String linguaRichiesta)
+	{
+		if (this.dizLinguaTraduzione.get(linguaRichiesta)!=null)
+		{
+			return this.dizLinguaTraduzione.get(linguaRichiesta);
+		}
+		else
+		{
+			return "";
+		}
 	}
-
-	String getTraduzioneLingua2() {
-		return traduzioneLingua2;
+	
+	boolean traduzioneEsistente(String lingua)
+	{
+		return this.dizLinguaTraduzione.containsKey(lingua);
 	}
 	
 }
