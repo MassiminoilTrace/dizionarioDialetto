@@ -3,6 +3,8 @@ package vocaboli;
 import java.util.HashMap;
 import java.util.Map;
 
+import distanzaParole.VettoreParola;
+
 public class Parola {
 	private Map<String, String> dizLinguaTraduzione = new HashMap<>();
 	

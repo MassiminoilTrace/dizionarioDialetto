@@ -1,20 +1,28 @@
 package vocaboli;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 class Proverbio {
-	private String traduzioneLingua1;
-	private String traduzioneLingua2;
+	private List<Parola> listaParole = new LinkedList<>();
 
-	Proverbio(String tradLingua1, String tradLingua2)
-	{
-		this.traduzioneLingua1 = tradLingua1;
-		this.traduzioneLingua2 = tradLingua2;
-	}
-
-	String getTraduzioneLingua1() {
-		return traduzioneLingua1;
-	}
-
-	String getTraduzioneLingua2() {
-		return traduzioneLingua2;
-	}
+//	String ottieniTraduzione(String linguaRichiesta)
+//	{
+//		if (this.dizLinguaTraduzione.get(linguaRichiesta)!=null)
+//		{
+//			return this.dizLinguaTraduzione.get(linguaRichiesta);
+//		}
+//		else
+//		{
+//			return "";
+//		}
+//	}
+//	
+//	boolean traduzioneEsistente(String lingua)
+//	{
+//		return this.dizLinguaTraduzione.containsKey(lingua);
+//	}
+	
 }
