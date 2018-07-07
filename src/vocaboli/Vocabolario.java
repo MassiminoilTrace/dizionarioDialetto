@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import distanzaParole.VettoreParola;
 
 public class Vocabolario {
-	private Collection<Parola> listaParole= new LinkedList<>();
+	public Collection<Parola> listaParole= new LinkedList<>();
 	private Collection<String> listaLingue = new LinkedList<>(); // TUTTO IN MAIUSCOLO
 
 	public Vocabolario(Collection<String> nomiLingue) {
@@ -21,23 +21,52 @@ public class Vocabolario {
 		}
 	}
 
-	public void aggiungiParola(String linguaOrigineParolAarg, String parolaOrigineArg, String linguaDestinazioneArg, String[] traduzioni)
+	public void aggiungiParola(String linguaOrigineParolAarg, String parolaOrigineArg, String linguaDestinazioneArg, String traduzione)
 	{
 		String linguaOrigineParola = linguaOrigineParolAarg.toUpperCase();
-		String parolaOrigine=parolaOrigineArg.toUpperCase();
+		String parolaOrigine=parolaOrigineArg.toUpperCase().trim();
+		String linguaDestinazione=linguaDestinazioneArg.toUpperCase();
+
+
+		if (!this.listaLingue.contains(linguaOrigineParola.toUpperCase()) || !this.listaLingue.contains(linguaDestinazione.toUpperCase()))
+		{
+			System.err.println("Lingua non trovata");
+			return;
+		}
+
+		String parolaDestinazioneArg = traduzione;
+		String parolaDestinazione = parolaDestinazioneArg.toUpperCase().trim();
+		if (this.listaParole.stream()
+				.filter(p -> p.ottieniTraduzione(linguaOrigineParola).equals(parolaOrigine)).count()==0
+				||
+				this.listaParole.stream().filter(p -> p.ottieniTraduzione(linguaDestinazione).equals(parolaDestinazione)).count()==0)
+		{
+			Parola p = new Parola();
+			this.listaParole.add(p);
+			p.aggiungiTraduzione(linguaOrigineParola, parolaOrigine);
+			p.aggiungiTraduzione(linguaDestinazione, parolaDestinazione);
+		}
+	}
+
+	public boolean aggiungiParole(String linguaOrigineParolAarg, String parolaOrigineArg, String linguaDestinazioneArg, String[] traduzioni)
+	{
+		String linguaOrigineParola = linguaOrigineParolAarg.toUpperCase();
+		String parolaOrigine=parolaOrigineArg.toUpperCase().trim();
 		String linguaDestinazione=linguaDestinazioneArg.toUpperCase();
 		
 		
 		if (!this.listaLingue.contains(linguaOrigineParola.toUpperCase()) || !this.listaLingue.contains(linguaDestinazione.toUpperCase()))
 		{
 			System.err.println("Lingua non trovata");
-			return;
+			return false;
 		}
 		for (String parolaDestinazioneArg:traduzioni)
 		{
-			String parolaDestinazione = parolaDestinazioneArg.toUpperCase();
+			String parolaDestinazione = parolaDestinazioneArg.toUpperCase().trim();
 			if (this.listaParole.stream()
-					.filter(p -> p.ottieniTraduzione(linguaOrigineParola).equals(parolaOrigine) && p.ottieniTraduzione(linguaDestinazione).equals(parolaDestinazione)).count()==0)
+					.filter(p -> p.ottieniTraduzione(linguaOrigineParola).equals(parolaOrigine)).count()==0
+					||
+					this.listaParole.stream().filter(p -> p.ottieniTraduzione(linguaDestinazione).equals(parolaDestinazione)).count()==0)
 			{
 				Parola p = new Parola();
 				this.listaParole.add(p);
@@ -45,6 +74,7 @@ public class Vocabolario {
 				p.aggiungiTraduzione(linguaDestinazione, parolaDestinazione);
 			}
 		}
+		return true;
 	}
 
 	public List<String> ricercaParola(String linguaOrigineArg, String linguaTraduzioneArg, String parolaDaCercareArg) ///DEVE RITORNARE UNA MAPPA CON LE TRADUZIONI OTTENUTE; QUINDI GROUPINGBY; YEEE
@@ -62,17 +92,19 @@ public class Vocabolario {
 				.collect(Collectors.toList());
 	}
 	
-	public List<String> cercaQuasi(String linguaArg, String parolaDaCercareArg)
+	public String cercaQuasi(String linguaArg,String parolaDaCercareArg)
 	{
 		String lingua=linguaArg.toUpperCase();
 		String parolaDaCercare = parolaDaCercareArg.toUpperCase();
 		if (!this.listaLingue.contains(lingua))
 		{
 			System.err.println("Lingua non trovata");
-			return new LinkedList<String>();
+			return "";
 		}
 		VettoreParola vP = new VettoreParola(parolaDaCercare);
-		return this.listaParole.stream().map(p -> new VettoreParola(p.ottieniTraduzione(lingua))).sorted(Comparator.comparing(v -> v.distanzaA(vP))).map(VettoreParola::getParola).limit(10).collect(Collectors.toList());
+		return this.listaParole.stream().map(p -> new VettoreParola(p.ottieniTraduzione(lingua)))
+				.sorted(Comparator.comparing(v -> v.distanzaA(vP)))
+				.map(VettoreParola::getParola).findFirst().orElse("");
 	}
 	
 	public void nuovoProverbio(String linguaOrigine, String proverbioOrigine, String linguaDestinazione, String proverbioDestinazione)
@@ -82,9 +114,22 @@ public class Vocabolario {
 	
 	public void caricaDati(FileReader f)//IMPORTAZIONE FILE CSV
 	{
-		//DA FARE
+		//funziona <3
 		BufferedReader br = new BufferedReader(f);
+		List<String> listaLinee = br.lines().collect(Collectors.toList());
+		String[] lingue = listaLinee.remove(0).split(";");
+//		System.err.println(lingue[0]+" "+lingue[1]);
+		for (String linea : listaLinee)
+		{
+			String[] traduzioni = linea.split(";");
+			if (traduzioni[1].split(",").length!=1)
+			{
+				this.aggiungiParole(lingue[0], traduzioni[0], lingue[1], traduzioni[1].split("\b*,\b*"));
+			}
+			else
+			{
+				this.aggiungiParola(lingue[0], traduzioni[0], lingue[1], traduzioni[1]);
+			}
+		}
 	}
-	
-	
 }
