@@ -132,4 +132,15 @@ public class Vocabolario {
 			}
 		}
 	}
+	public List<String> cercaPezzoParola(String stralcio, String linguaRicerca)
+	{
+		return this.listaParole.stream()
+				.map(v -> v.ottieniTraduzione(linguaRicerca.toUpperCase()))
+				.filter(s -> !s.equals(""))
+				.filter(p -> p.toUpperCase().contains(stralcio.toUpperCase()))
+				.distinct()
+				.sorted()
+				.collect(Collectors.toList());
+	}
+	
 }

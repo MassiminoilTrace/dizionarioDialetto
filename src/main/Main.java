@@ -25,6 +25,7 @@ public class Main {
 		System.out.println(gestVoc.ricercaParola("SANREMASCO","ITALIANO", gestVoc.cercaQuasi("SANREMASCO", "acata")));//[brugaja}
 		System.out.println(gestVoc.cercaQuasi("SANREMASCO", "acata"));
 		System.out.println(gestVoc.cercaQuasi("SANREMASCO", "AIpEi"));
+		System.out.println("Ricerca di stralci"+ gestVoc.cercaPezzoParola("ci", "Sanremasco"));
 //		System.out.println(gestVoc.cercaQuasi("italiano", "BRICKOLà"));
 //		System.out.println(gestVoc.cercaQuasi("italiano", "mnchine"));
 //		System.out.println(gestVoc.ricercaParola("sanremasco", "italiano", "brugaja"));
