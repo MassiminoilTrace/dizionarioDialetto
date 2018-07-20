@@ -2,6 +2,8 @@ package vocaboli;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -20,7 +22,18 @@ public class Vocabolario {
 			this.listaLingue.add(e.toUpperCase());
 		}
 	}
-
+	
+	public Vocabolario(FileReader f)
+	{
+		this.caricaDati(f);
+		
+	}
+	
+	public List<String> getListaLingue()
+	{
+		return this.listaLingue.stream().collect(Collectors.toList());
+	}
+	
 	public void aggiungiParola(String linguaOrigineParolAarg, String parolaOrigineArg, String linguaDestinazioneArg, String traduzione)
 	{
 		String linguaOrigineParola = linguaOrigineParolAarg.toUpperCase();
@@ -118,6 +131,14 @@ public class Vocabolario {
 		BufferedReader br = new BufferedReader(f);
 		List<String> listaLinee = br.lines().collect(Collectors.toList());
 		String[] lingue = listaLinee.remove(0).split(";");
+		if (this.listaLingue.size()==0)
+		{
+			for (String e:lingue)
+			{
+				this.listaLingue.add(e.toUpperCase());
+			}
+		}
+		
 //		System.err.println(lingue[0]+" "+lingue[1]);
 		for (String linea : listaLinee)
 		{
@@ -131,6 +152,7 @@ public class Vocabolario {
 				this.aggiungiParola(lingue[0], traduzioni[0], lingue[1], traduzioni[1]);
 			}
 		}
+		//br.close();
 	}
 	public List<String> cercaPezzoParola(String stralcio, String linguaRicerca)
 	{
