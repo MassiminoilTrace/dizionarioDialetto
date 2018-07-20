@@ -45,6 +45,7 @@ public class interfacciaCLI {
 //		System.out.println("Scegli l'operazione da eseguire:\n\t1 - ricerca da "+vc.getListaLingue().get(0)+" a "+vc.getListaLingue().get(1));
 //		System.out.println("\t2 - ricerca da "+vc.getListaLingue().get(1)+" a"+vc.getListaLingue().get(0));
 //		System.out.println("\t9 - esci");
+		System.out.println("\nDizionario avviato correttamente:");
 		
 		int scelta=0;
 		Scanner sc = new Scanner(System.in);
@@ -67,6 +68,7 @@ public class interfacciaCLI {
 				{
 					System.out.println("Inserisci un numero");
 					scelta = 0;
+					sc.nextLine();
 				}
 			}
 			if (scelta==1 || scelta==2)

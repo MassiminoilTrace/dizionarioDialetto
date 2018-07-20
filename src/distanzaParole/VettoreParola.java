@@ -42,6 +42,7 @@ public class VettoreParola {
 		{
 			sommaIntermedia += Math.pow( v2.getVettore().getOrDefault(c, 0) - this.vettParola.getOrDefault(c, 0)  , 2);
 		}
+		//System.err.println(Math.sqrt(sommaIntermedia));
 		return Math.sqrt(sommaIntermedia);
 	}
 	
