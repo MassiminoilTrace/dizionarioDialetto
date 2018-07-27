@@ -165,4 +165,10 @@ public class Vocabolario {
 				.collect(Collectors.toList());
 	}
 	
+	public List<String> iniziaCon(String stralcio, String linguaRicerca)
+	{
+		String stralcio2= stralcio.toUpperCase();
+		return this.listaParole.stream().map(p -> p.ottieniTraduzione(linguaRicerca)).filter(s -> s.matches(stralcio2+".*")).sorted().collect(Collectors.toList());
+	}
+	
 }

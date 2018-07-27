@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import vocaboli.Vocabolario;
 
@@ -51,9 +52,10 @@ public class interfacciaCLI {
 		Scanner sc = new Scanner(System.in);
 		do
 		{
-			System.out.println("\nDizionario avviato correttamente:");
-			System.out.println("Scegli l'operazione da eseguire:\n\t1 - ricerca da "+vc.getListaLingue().get(0)+" a "+vc.getListaLingue().get(1));
+			System.out.println("\n\nScegli l'operazione da eseguire:\n\t1 - ricerca da "+vc.getListaLingue().get(0)+" a "+vc.getListaLingue().get(1));
 			System.out.println("\t2 - ricerca da "+vc.getListaLingue().get(1)+" a "+vc.getListaLingue().get(0));
+			System.out.println("\t3 - parola in "+vc.getListaLingue().get(0)+" che inizia con...");
+			System.out.println("\t4 - parola in "+vc.getListaLingue().get(1)+" che inizia con...");
 			System.out.println("\t9 - esci");
 			scelta = 0;
 			while (scelta == 0)
@@ -91,6 +93,16 @@ public class interfacciaCLI {
 				//
 				System.out.println("\nRicerca parola simile:");
 				System.out.println(vc.cercaQuasi(linguaOrig, strInput)+" -> "+vc.ricercaParola(linguaOrig, linguaDest, vc.cercaQuasi(linguaOrig, strInput)));
+			}
+			
+			if (scelta==3||scelta==4)
+			{
+				System.out.println("Inserisci la parola in "+(scelta==3 ? vc.getListaLingue().get(0) : vc.getListaLingue().get(1)));
+				sc.nextLine();
+				System.out.print(">>> ");
+				String strInput = sc.nextLine();
+				System.out.println(vc.iniziaCon(strInput, (scelta==3 ? vc.getListaLingue().get(0) : vc.getListaLingue().get(1))).stream().collect(Collectors.joining("\n")));
+				
 			}
 		}
 		while(scelta!=9);
