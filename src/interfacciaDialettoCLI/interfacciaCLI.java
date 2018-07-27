@@ -2,7 +2,6 @@ package interfacciaDialettoCLI;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -31,11 +30,6 @@ public class interfacciaCLI {
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			System.err.println("Errore, file "+percorso + "non trovato");
-			e.printStackTrace();
-			//System.exit(0);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println("IOException avvenuta");
 			e.printStackTrace();
 			//System.exit(0);
 		}
@@ -106,7 +100,7 @@ public class interfacciaCLI {
 			}
 		}
 		while(scelta!=9);
-
+		sc.close();
 		System.out.println("Uscita dal programma [OK]");
 		System.exit(0);
 	}
