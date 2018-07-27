@@ -61,10 +61,9 @@ public class Vocabolario {
 		}
 	}
 
-	public boolean aggiungiParole(String linguaOrigineParolAarg, String parolaOrigineArg, String linguaDestinazioneArg, String[] traduzioni)
+	public boolean aggiungiParole(String linguaOrigineParolAarg, String parolaOrigineArg[], String linguaDestinazioneArg, String[] traduzioni)
 	{
 		String linguaOrigineParola = linguaOrigineParolAarg.toUpperCase();
-		String parolaOrigine=parolaOrigineArg.toUpperCase().trim();
 		String linguaDestinazione=linguaDestinazioneArg.toUpperCase();
 		
 		
@@ -73,20 +72,33 @@ public class Vocabolario {
 			System.err.println("Lingua non trovata");
 			return false;
 		}
-		for (String parolaDestinazioneArg:traduzioni)
+		
+		for (String parolaOrigineLow:parolaOrigineArg)
 		{
-			String parolaDestinazione = parolaDestinazioneArg.toUpperCase().trim();
-			if (this.listaParole.stream()
-					.filter(p -> p.ottieniTraduzione(linguaOrigineParola).equals(parolaOrigine)).count()==0
-					||
-					this.listaParole.stream().filter(p -> p.ottieniTraduzione(linguaDestinazione).equals(parolaDestinazione)).count()==0)
+			String parolaOrigine= parolaOrigineLow.toUpperCase().trim();
+			for (String parolaDestinazioneLow:traduzioni)
 			{
-				Parola p = new Parola();
-				this.listaParole.add(p);
-				p.aggiungiTraduzione(linguaOrigineParola, parolaOrigine);
-				p.aggiungiTraduzione(linguaDestinazione, parolaDestinazione);
+				String parolaDestinazione = parolaDestinazioneLow.toUpperCase().trim();
+				
+				//Associo ogni coppia di parole
+				
+				//Se l'associazione non esiste ancora
+				if (this.listaParole.stream()
+						.filter(p -> 
+						p.ottieniTraduzione(linguaOrigineParola).equals(parolaOrigine)
+						&& p.ottieniTraduzione(linguaDestinazione).equals(parolaDestinazione)
+						).count()==0)
+				{
+					Parola p = new Parola();
+					this.listaParole.add(p);
+					p.aggiungiTraduzione(linguaOrigineParola, parolaOrigine);
+					p.aggiungiTraduzione(linguaDestinazione, parolaDestinazione);
+				}
+				
 			}
 		}
+		
+		
 		return true;
 	}
 
@@ -102,6 +114,7 @@ public class Vocabolario {
 		}
 		return this.listaParole.stream().filter(p -> p.ottieniTraduzione(linguaOrigine).equals(parolaDaCercare))
 				.map(p-> p.ottieniTraduzione(linguaTraduzione))
+				.distinct()
 				.collect(Collectors.toList());
 	}
 	
@@ -116,6 +129,7 @@ public class Vocabolario {
 		}
 		VettoreParola vP = new VettoreParola(parolaDaCercare);
 		return this.listaParole.stream().map(p -> new VettoreParola(p.ottieniTraduzione(lingua)))
+				.distinct()
 				.sorted(Comparator.comparing(v -> v.distanzaA(vP)))
 				.map(VettoreParola::getParola).findFirst().orElse("");
 	}
@@ -143,14 +157,7 @@ public class Vocabolario {
 		for (String linea : listaLinee)
 		{
 			String[] traduzioni = linea.split(";");
-			if (traduzioni[1].split(",").length!=1)
-			{
-				this.aggiungiParole(lingue[0], traduzioni[0], lingue[1], traduzioni[1].split("\b*,\b*"));
-			}
-			else
-			{
-				this.aggiungiParola(lingue[0], traduzioni[0], lingue[1], traduzioni[1]);
-			}
+			this.aggiungiParole(lingue[0], traduzioni[0].split("\b*,\b*"), lingue[1], traduzioni[1].split("\b*,\b*"));
 		}
 		//br.close();
 	}
@@ -168,7 +175,12 @@ public class Vocabolario {
 	public List<String> iniziaCon(String stralcio, String linguaRicerca)
 	{
 		String stralcio2= stralcio.toUpperCase();
-		return this.listaParole.stream().map(p -> p.ottieniTraduzione(linguaRicerca)).filter(s -> s.matches(stralcio2+".*")).sorted().collect(Collectors.toList());
+		return this.listaParole.stream()
+				.map(p -> p.ottieniTraduzione(linguaRicerca))
+				.filter(s -> s.matches(stralcio2+".*"))
+				.distinct()
+				.sorted()
+				.collect(Collectors.toList());
 	}
 	
 }
